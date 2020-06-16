@@ -41,6 +41,27 @@ public class JwtHandler
 			throw new AccessDeniedException("Access Denied");
 		}
 	}
+	
+	public String verifyTokenAndGetUserId(String compactJwt) throws AccessDeniedException 
+	{
+		try 
+		{
+			JwtParser jwtParser =  Jwts.parser().setSigningKey(base64EncodedSecretKey);
+			Claims claims = jwtParser.parseClaimsJws(compactJwt).getBody();
+			if(claims == null || claims.getSubject() == null) {
+				throw new AccessDeniedException("Access Denied");
+			}
+			if(claims.getAudience() ==null || Integer.parseInt(claims.getAudience()) <= 0) {
+				throw new AccessDeniedException("Access Denied");
+			}
+			return claims.getAudience();
+		} 
+		catch (SignatureException e)
+		{
+			e.printStackTrace();
+			throw new AccessDeniedException("Access Denied");
+		}
+	}
 
 	public String verifyAndGetUserId(String compactJwt) throws AccessDeniedException
 	{
