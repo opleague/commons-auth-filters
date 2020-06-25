@@ -91,5 +91,29 @@ public class JwtHandler
 		String jwtToken = Jwts.builder().setClaims(claims).signWith(signatureAlgorithm, base64EncodedSecretKey).compact();
 		return jwtToken;
 	}
+	
+	public String verifyTokenAndGetUserName(String compactJwt) throws AccessDeniedException 
+	{
+		try 
+		{
+			JwtParser jwtParser =  Jwts.parser().setSigningKey(base64EncodedSecretKey);
+			Claims claims = jwtParser.parseClaimsJws(compactJwt).getBody();
+			if(claims == null || claims.getSubject() == null) {
+				throw new AccessDeniedException("Access Denied");
+			}
+			if(claims.getAudience() ==null || Integer.parseInt(claims.getAudience()) <= 0) {
+				throw new AccessDeniedException("Access Denied");
+			}
+			if(claims.get("name") == null) {
+				throw new AccessDeniedException("Access Denied");
+			}
+			return (String) claims.get("name");
+		} 
+		catch (SignatureException e)
+		{
+			e.printStackTrace();
+			throw new AccessDeniedException("Access Denied");
+		}
+	}
 
 }
