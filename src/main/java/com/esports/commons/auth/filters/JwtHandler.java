@@ -5,6 +5,7 @@ import java.util.Date;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -38,6 +39,8 @@ public class JwtHandler
 		catch (SignatureException e)
 		{
 			e.printStackTrace();
+			throw new AccessDeniedException("Access Denied");
+		}catch (ExpiredJwtException e) {
 			throw new AccessDeniedException("Access Denied");
 		}
 	}
