@@ -88,7 +88,7 @@ public class JwtHandler
 		claims.setAudience(userId);
 		claims.setIssuedAt(new Date(System.currentTimeMillis()));
 		claims.setIssuer("opleague.com");
-		claims.setExpiration(new Date(System.currentTimeMillis() + 172800000));
+		//claims.setExpiration(new Date(System.currentTimeMillis() + 172800000));
 		claims.put("name", name);
 		// Get The URL Safe JWT Token
 		String jwtToken = Jwts.builder().setClaims(claims).signWith(signatureAlgorithm, base64EncodedSecretKey).compact();
